@@ -64,9 +64,13 @@ class AuthService {
         lastDonated: Timestamp.fromDate(DateTime(2000)),  // Default to a long time ago
         donationCount: 0,
         privacySettings: {
-          'showEmail': false,
+          'showEmail': true,
           'showPhone': true,
           'showWhatsapp': true,
+          'showAddress': true,
+          'showEducation': true,
+          'showOccupation': true,
+          'showDonationHistory': true,
         },
         locations: locations,
       );

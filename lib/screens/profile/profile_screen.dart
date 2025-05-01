@@ -303,11 +303,6 @@ class ProfileScreen extends StatelessWidget {
                        AppConstants.educationLevels.indexOf('SSC')) &&
                       user.sscYear != null && user.sscYear!.isNotEmpty)
                     _buildInfoItem(Icons.calendar_today, 'SSC Year', user.sscYear!),
-                  if ((user.highestEducationLevel == 'SSC' || 
-                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
-                       AppConstants.educationLevels.indexOf('SSC')) &&
-                      user.sscSession != null && user.sscSession!.isNotEmpty)
-                    _buildInfoItem(Icons.calendar_today, 'SSC Session', user.sscSession!),
                   
                   // HSC Information
                   if ((user.highestEducationLevel == 'HSC' || 
@@ -320,11 +315,6 @@ class ProfileScreen extends StatelessWidget {
                        AppConstants.educationLevels.indexOf('HSC')) &&
                       user.hscYear != null && user.hscYear!.isNotEmpty)
                     _buildInfoItem(Icons.calendar_today, 'HSC Year', user.hscYear!),
-                  if ((user.highestEducationLevel == 'HSC' || 
-                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
-                       AppConstants.educationLevels.indexOf('HSC')) &&
-                      user.hscSession != null && user.hscSession!.isNotEmpty)
-                    _buildInfoItem(Icons.calendar_today, 'HSC Session', user.hscSession!),
                   
                   // Honours Information
                   if ((user.highestEducationLevel == 'Honours' || 
@@ -337,11 +327,6 @@ class ProfileScreen extends StatelessWidget {
                        AppConstants.educationLevels.indexOf('Honours')) &&
                       user.honorsSubject != null && user.honorsSubject!.isNotEmpty)
                     _buildInfoItem(Icons.book, 'Honours Subject', user.honorsSubject!),
-                  if ((user.highestEducationLevel == 'Honours' || 
-                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
-                       AppConstants.educationLevels.indexOf('Honours')) &&
-                      user.honorsSession != null && user.honorsSession!.isNotEmpty)
-                    _buildInfoItem(Icons.calendar_today, 'Honours Session', user.honorsSession!),
                   if ((user.highestEducationLevel == 'Honours' || 
                        AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
                        AppConstants.educationLevels.indexOf('Honours')) &&

@@ -330,6 +330,22 @@ class DonorDetailsScreen extends StatelessWidget {
                       'Institution',
                       donor.institution,
                     ),
+                    if (donor.subject != null && donor.subject!.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _buildInfoItem(
+                        Icons.school,
+                        'Department/Subject',
+                        donor.subject!,
+                      ),
+                    ],
+                    if (donor.donationInterestLevel != null && donor.donationInterestLevel!.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _buildInfoItem(
+                        Icons.volunteer_activism,
+                        'Donation Interest',
+                        donor.donationInterestLevel!,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -370,10 +386,6 @@ class DonorDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       _buildInfoItem(Icons.book, 'Subject/Department', donor.subject!),
                     ],
-                    if (donor.session != null && donor.session!.isNotEmpty) ...[
-                      const SizedBox(height: 12),
-                      _buildInfoItem(Icons.date_range, 'Session', donor.session!),
-                    ],
                     
                     // Lower Class Information
                     if ((donor.highestEducationLevel == 'Lower Class' || 
@@ -405,10 +417,6 @@ class DonorDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         _buildInfoItem(Icons.calendar_today, 'SSC Year', donor.sscYear!),
                       ],
-                      if (donor.sscSession != null && donor.sscSession!.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _buildInfoItem(Icons.calendar_today, 'SSC Session', donor.sscSession!),
-                      ],
                     ],
                     
                     // HSC Information
@@ -422,10 +430,6 @@ class DonorDetailsScreen extends StatelessWidget {
                       if (donor.hscYear != null && donor.hscYear!.isNotEmpty) ...[
                         const SizedBox(height: 12),
                         _buildInfoItem(Icons.calendar_today, 'HSC Year', donor.hscYear!),
-                      ],
-                      if (donor.hscSession != null && donor.hscSession!.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _buildInfoItem(Icons.calendar_today, 'HSC Session', donor.hscSession!),
                       ],
                     ],
                     
@@ -455,7 +459,7 @@ class DonorDetailsScreen extends StatelessWidget {
                       ],
                       if (donor.honorsSubjectBatch != null && donor.honorsSubjectBatch!.isNotEmpty) ...[
                         const SizedBox(height: 12),
-                        _buildInfoItem(Icons.people, 'Honours Subject Batch', donor.honorsSubjectBatch!),
+                        _buildInfoItem(Icons.people, 'Honours Departmental Batch', donor.honorsSubjectBatch!),
                       ],
                     ],
                     

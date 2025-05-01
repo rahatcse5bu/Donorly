@@ -170,9 +170,13 @@ class UserModel {
       lastDonated: map['lastDonated'] ?? Timestamp.now(),
       donationCount: map['donationCount'] ?? 0,
       privacySettings: Map<String, bool>.from(map['privacySettings'] ?? {
-        'showEmail': false,
+        'showEmail': true,
         'showPhone': true,
         'showWhatsapp': true,
+        'showAddress': true,
+        'showEducation': true,
+        'showOccupation': true,
+        'showDonationHistory': true,
       }),
       locations: Map<String, List<String>>.from(
         map['locations']?.map(

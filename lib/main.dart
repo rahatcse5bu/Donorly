@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'constants/app_constants.dart';
 import 'providers/user_provider.dart';
 import 'providers/donation_provider.dart';
@@ -17,6 +18,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
+  // Enable persistence for Firebase Auth
+  await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  
   runApp(const MyApp());
 }
 
@@ -27,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()..initialize()),
         ChangeNotifierProvider(create: (_) => DonationProvider()),
       ],
       child: MaterialApp(

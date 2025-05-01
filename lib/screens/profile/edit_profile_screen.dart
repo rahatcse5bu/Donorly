@@ -585,25 +585,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   textCapitalization: TextCapitalization.words,
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Session',
-                        hint: 'e.g., 2016-17',
-                        controller: _sscSessionController,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Year',
-                        hint: 'e.g., 2017',
-                        controller: _sscYearController,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
+                CustomTextField(
+                  label: 'Year',
+                  hint: 'e.g., 2017',
+                  controller: _sscYearController,
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 24),
               ],
@@ -634,25 +620,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Session',
-                        hint: 'e.g., 2018-19',
-                        controller: _hscSessionController,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Year',
-                        hint: 'e.g., 2019',
-                        controller: _hscYearController,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
+                CustomTextField(
+                  label: 'Year',
+                  hint: 'e.g., 2019',
+                  controller: _hscYearController,
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 24),
               ],
@@ -728,7 +700,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: CustomTextField(
-                        label: 'Subject Batch',
+                        label: 'Departmental Batch',
                         hint: 'Enter batch number',
                         controller: _honorsSubjectBatchController,
                       ),
@@ -809,7 +781,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: CustomTextField(
-                        label: 'Subject Batch',
+                        label: 'Departmental Batch',
                         hint: 'Enter batch number',
                         controller: _mastersSubjectBatchController,
                       ),
