@@ -103,24 +103,7 @@ class DonationService {
     String? bloodGroup,
     String? institution,
     String? subject,
-    String? batchNumber,
-    String? session,
-    String? hscSession,
     String? donationInterestLevel,
-    String? hscCollege,
-    String? hscYear,
-    String? honorsInstitution,
-    String? honorsSubject,
-    String? honorsSession,
-    String? honorsYear,
-    String? honorsInstitutionBatch,
-    String? honorsSubjectBatch,
-    String? mastersInstitution,
-    String? mastersSubject,
-    String? mastersSession,
-    String? mastersYear,
-    String? mastersInstitutionBatch,
-    String? mastersSubjectBatch,
     Map<String, List<String>>? donationAreaPreferences,
   }) async {
     Query query = _usersCollection;
@@ -173,109 +156,21 @@ class DonationService {
     
     // Apply education filters
     if (subject != null && subject.isNotEmpty) {
-      users = users.where((user) => 
-        user.subject?.toLowerCase() == subject.toLowerCase() ||
-        user.honorsSubject?.toLowerCase() == subject.toLowerCase() ||
-        user.mastersSubject?.toLowerCase() == subject.toLowerCase()
-      ).toList();
+      users = users.where((user) => user.subject == subject).toList();
     }
     
-    if (batchNumber != null && batchNumber.isNotEmpty) {
-      users = users.where((user) => 
-        user.batchNumber == batchNumber ||
-        user.honorsInstitutionBatch == batchNumber ||
-        user.honorsSubjectBatch == batchNumber ||
-        user.mastersInstitutionBatch == batchNumber ||
-        user.mastersSubjectBatch == batchNumber
-      ).toList();
-    }
-    
-    if (session != null && session.isNotEmpty) {
-      users = users.where((user) => 
-        user.session == session ||
-        user.honorsSession == session ||
-        user.mastersSession == session
-      ).toList();
-    }
-    
-    // HSC filters
-    if (hscSession != null && hscSession.isNotEmpty) {
-      users = users.where((user) => user.hscSession == hscSession).toList();
-    }
-    
-    if (hscCollege != null && hscCollege.isNotEmpty) {
-      users = users.where((user) => user.hscCollege == hscCollege).toList();
-    }
-    
-    if (hscYear != null && hscYear.isNotEmpty) {
-      users = users.where((user) => user.hscYear == hscYear).toList();
-    }
-    
-    // Honours filters
-    if (honorsInstitution != null && honorsInstitution.isNotEmpty) {
-      users = users.where((user) => user.honorsInstitution == honorsInstitution).toList();
-    }
-    
-    if (honorsSubject != null && honorsSubject.isNotEmpty) {
-      users = users.where((user) => user.honorsSubject == honorsSubject).toList();
-    }
-    
-    if (honorsSession != null && honorsSession.isNotEmpty) {
-      users = users.where((user) => user.honorsSession == honorsSession).toList();
-    }
-    
-    if (honorsYear != null && honorsYear.isNotEmpty) {
-      users = users.where((user) => user.honorsYear == honorsYear).toList();
-    }
-    
-    if (honorsInstitutionBatch != null && honorsInstitutionBatch.isNotEmpty) {
-      users = users.where((user) => user.honorsInstitutionBatch == honorsInstitutionBatch).toList();
-    }
-    
-    if (honorsSubjectBatch != null && honorsSubjectBatch.isNotEmpty) {
-      users = users.where((user) => user.honorsSubjectBatch == honorsSubjectBatch).toList();
-    }
-    
-    // Masters filters
-    if (mastersInstitution != null && mastersInstitution.isNotEmpty) {
-      users = users.where((user) => user.mastersInstitution == mastersInstitution).toList();
-    }
-    
-    if (mastersSubject != null && mastersSubject.isNotEmpty) {
-      users = users.where((user) => user.mastersSubject == mastersSubject).toList();
-    }
-    
-    if (mastersSession != null && mastersSession.isNotEmpty) {
-      users = users.where((user) => user.mastersSession == mastersSession).toList();
-    }
-    
-    if (mastersYear != null && mastersYear.isNotEmpty) {
-      users = users.where((user) => user.mastersYear == mastersYear).toList();
-    }
-    
-    if (mastersInstitutionBatch != null && mastersInstitutionBatch.isNotEmpty) {
-      users = users.where((user) => user.mastersInstitutionBatch == mastersInstitutionBatch).toList();
-    }
-    
-    if (mastersSubjectBatch != null && mastersSubjectBatch.isNotEmpty) {
-      users = users.where((user) => user.mastersSubjectBatch == mastersSubjectBatch).toList();
-    }
-    
-    // Donation area preferences filtering
-    if (donationAreaPreferences != null && donationAreaPreferences.isNotEmpty) {
+    // Apply donation area preferences filters
+    if (donationAreaPreferences != null) {
       for (final entry in donationAreaPreferences.entries) {
         final key = entry.key;
         final values = entry.value;
         
-        if (values.isEmpty) continue;
-        
-        users = users.where((user) {
-          final userPrefs = user.donationAreaPreferences?[key];
-          if (userPrefs == null || userPrefs.isEmpty) return false;
-          
-          // Check if any of the user's preferences match the search criteria
-          return userPrefs.any((pref) => values.contains(pref));
-        }).toList();
+        if (values.isNotEmpty) {
+          users = users.where((user) => 
+            user.donationAreaPreferences?.containsKey(key) == true &&
+            user.donationAreaPreferences![key]!.any((value) => values.contains(value))
+          ).toList();
+        }
       }
     }
     

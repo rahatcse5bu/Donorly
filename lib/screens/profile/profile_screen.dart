@@ -121,9 +121,55 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             
+            // Interest Level Card
+            if (user.donationInterestLevel != null && user.donationInterestLevel!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.volunteer_activism,
+                          color: AppConstants.primaryColor,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Donation Interest Level',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppConstants.subtitleColor,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              user.donationInterestLevel!,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppConstants.textColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            
             // Action Buttons
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   _buildActionButton(
@@ -176,6 +222,8 @@ class ProfileScreen extends StatelessWidget {
                 _buildInfoItem(FontAwesomeIcons.whatsapp, 'WhatsApp', user.whatsapp),
                 _buildInfoItem(Icons.work_outlined, 'Occupation', user.occupation),
                 _buildInfoItem(Icons.business_outlined, 'Institution', user.institution),
+                if (user.subject != null && user.subject!.isNotEmpty)
+                  _buildInfoItem(Icons.book_outlined, 'Subject/Department', user.subject!),
               ],
             ),
             
@@ -188,6 +236,161 @@ class ProfileScreen extends StatelessWidget {
                 _buildInfoItem(Icons.home_outlined, 'Permanent Address', user.permanentAddress),
               ],
             ),
+            
+            // Location Section
+            _buildInfoSection(
+              context,
+              'Location Details',
+              [
+                if (user.locations.containsKey('Division') && user.locations['Division']!.isNotEmpty)
+                  _buildInfoItem(Icons.location_city, 'Division', user.locations['Division']![0]),
+                if (user.locations.containsKey('District') && user.locations['District']!.isNotEmpty)
+                  _buildInfoItem(Icons.location_city, 'District', user.locations['District']![0]),
+                if (user.locations.containsKey('Upazila') && user.locations['Upazila']!.isNotEmpty)
+                  _buildInfoItem(Icons.location_city, 'Upazila', user.locations['Upazila']![0]),
+                if (user.locations.containsKey('City') && user.locations['City']!.isNotEmpty)
+                  _buildInfoItem(Icons.location_city, 'City', user.locations['City']![0]),
+                if (user.locations.containsKey('Area') && user.locations['Area']!.isNotEmpty)
+                  _buildInfoItem(Icons.location_city, 'Area', user.locations['Area']![0]),
+              ],
+            ),
+            
+            // Education Information Section
+            if (user.subject != null || user.batchNumber != null || user.session != null || 
+                user.hscCollege != null || user.hscYear != null || user.sscSchool != null ||
+                user.lowerClassName != null || user.highestEducationLevel != null)
+              _buildInfoSection(
+                context,
+                'Education Information',
+                [
+                  // Highest Education Level
+                  if (user.highestEducationLevel != null && user.highestEducationLevel!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'Highest Education', user.highestEducationLevel!),
+                  
+                  // General Education Info
+                  if (user.institution != null && user.institution.isNotEmpty)
+                    _buildInfoItem(Icons.account_balance, 'Institution', user.institution),
+                  if (user.subject != null && user.subject!.isNotEmpty)
+                    _buildInfoItem(Icons.book, 'Subject/Department', user.subject!),
+                  if (user.session != null && user.session!.isNotEmpty)
+                    _buildInfoItem(Icons.date_range, 'Session', user.session!),
+                  
+                  // Lower Class Information
+                  if ((user.highestEducationLevel == 'Lower Class' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Lower Class')) &&
+                      user.lowerClassName != null && user.lowerClassName!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'Class', user.lowerClassName!),
+                  if ((user.highestEducationLevel == 'Lower Class' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Lower Class')) &&
+                      user.lowerClassSchool != null && user.lowerClassSchool!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'School', user.lowerClassSchool!),
+                  if ((user.highestEducationLevel == 'Lower Class' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Lower Class')) &&
+                      user.lowerClassYear != null && user.lowerClassYear!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'Year', user.lowerClassYear!),
+                  
+                  // SSC Information
+                  if ((user.highestEducationLevel == 'SSC' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('SSC')) &&
+                      user.sscSchool != null && user.sscSchool!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'SSC School', user.sscSchool!),
+                  if ((user.highestEducationLevel == 'SSC' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('SSC')) &&
+                      user.sscYear != null && user.sscYear!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'SSC Year', user.sscYear!),
+                  if ((user.highestEducationLevel == 'SSC' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('SSC')) &&
+                      user.sscSession != null && user.sscSession!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'SSC Session', user.sscSession!),
+                  
+                  // HSC Information
+                  if ((user.highestEducationLevel == 'HSC' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('HSC')) &&
+                      user.hscCollege != null && user.hscCollege!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'HSC College', user.hscCollege!),
+                  if ((user.highestEducationLevel == 'HSC' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('HSC')) &&
+                      user.hscYear != null && user.hscYear!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'HSC Year', user.hscYear!),
+                  if ((user.highestEducationLevel == 'HSC' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('HSC')) &&
+                      user.hscSession != null && user.hscSession!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'HSC Session', user.hscSession!),
+                  
+                  // Honours Information
+                  if ((user.highestEducationLevel == 'Honours' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Honours')) &&
+                      user.honorsInstitution != null && user.honorsInstitution!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'Honours Institution', user.honorsInstitution!),
+                  if ((user.highestEducationLevel == 'Honours' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Honours')) &&
+                      user.honorsSubject != null && user.honorsSubject!.isNotEmpty)
+                    _buildInfoItem(Icons.book, 'Honours Subject', user.honorsSubject!),
+                  if ((user.highestEducationLevel == 'Honours' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Honours')) &&
+                      user.honorsSession != null && user.honorsSession!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'Honours Session', user.honorsSession!),
+                  if ((user.highestEducationLevel == 'Honours' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Honours')) &&
+                      user.honorsYear != null && user.honorsYear!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'Honours Year', user.honorsYear!),
+                  if ((user.highestEducationLevel == 'Honours' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Honours')) &&
+                      user.honorsInstitutionBatch != null && user.honorsInstitutionBatch!.isNotEmpty)
+                    _buildInfoItem(Icons.people, 'Honours Institution Batch', user.honorsInstitutionBatch!),
+                  if ((user.highestEducationLevel == 'Honours' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Honours')) &&
+                      user.honorsSubjectBatch != null && user.honorsSubjectBatch!.isNotEmpty)
+                    _buildInfoItem(Icons.people, 'Honours Subject Batch', user.honorsSubjectBatch!),
+                  
+                  // Masters Information
+                  if ((user.highestEducationLevel == 'Masters' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Masters')) &&
+                      user.mastersInstitution != null && user.mastersInstitution!.isNotEmpty)
+                    _buildInfoItem(Icons.school, 'Masters Institution', user.mastersInstitution!),
+                  if ((user.highestEducationLevel == 'Masters' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Masters')) &&
+                      user.mastersSubject != null && user.mastersSubject!.isNotEmpty)
+                    _buildInfoItem(Icons.book, 'Masters Subject', user.mastersSubject!),
+                  if ((user.highestEducationLevel == 'Masters' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Masters')) &&
+                      user.mastersSession != null && user.mastersSession!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'Masters Session', user.mastersSession!),
+                  if ((user.highestEducationLevel == 'Masters' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Masters')) &&
+                      user.mastersYear != null && user.mastersYear!.isNotEmpty)
+                    _buildInfoItem(Icons.calendar_today, 'Masters Year', user.mastersYear!),
+                  if ((user.highestEducationLevel == 'Masters' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Masters')) &&
+                      user.mastersInstitutionBatch != null && user.mastersInstitutionBatch!.isNotEmpty)
+                    _buildInfoItem(Icons.people, 'Masters Institution Batch', user.mastersInstitutionBatch!),
+                  if ((user.highestEducationLevel == 'Masters' || 
+                       AppConstants.educationLevels.indexOf(user.highestEducationLevel ?? '') > 
+                       AppConstants.educationLevels.indexOf('Masters')) &&
+                      user.mastersSubjectBatch != null && user.mastersSubjectBatch!.isNotEmpty)
+                    _buildInfoItem(Icons.people, 'Masters Subject Batch', user.mastersSubjectBatch!),
+                ],
+              ),
             
             // Locations Section
             if (user.locations.isNotEmpty)

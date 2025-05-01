@@ -60,6 +60,11 @@ class AppConstants {
     'Low', 'Medium', 'High', 'Extremely High'
   ];
 
+  // Education Levels (in ascending order)
+  static const List<String> educationLevels = [
+    'Lower Class', 'SSC', 'HSC', 'Honours', 'Masters', 'PhD'
+  ];
+
   // Bangladesh Divisions
   static const List<String> divisions = [
     'Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 

@@ -162,6 +162,19 @@ class DonorDetailsScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    
+                    // Donation Interest Level
+                    if (donor.donationInterestLevel != null && donor.donationInterestLevel!.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _buildStatItem(
+                        Icons.volunteer_activism,
+                        'Interest Level',
+                        donor.donationInterestLevel!,
+                        valueColor: donor.donationInterestLevel == 'High' || donor.donationInterestLevel == 'Extremely High'
+                            ? Colors.green
+                            : AppConstants.textColor,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -317,6 +330,164 @@ class DonorDetailsScreen extends StatelessWidget {
                       'Institution',
                       donor.institution,
                     ),
+                  ],
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Education Information
+            if (donor.subject != null || donor.batchNumber != null || donor.session != null || 
+                donor.hscCollege != null || donor.hscYear != null || donor.sscSchool != null ||
+                donor.lowerClassName != null || donor.highestEducationLevel != null)
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Education Information',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppConstants.textColor,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Highest Education Level
+                    if (donor.highestEducationLevel != null && donor.highestEducationLevel!.isNotEmpty)
+                      _buildInfoItem(Icons.school, 'Highest Education', donor.highestEducationLevel!),
+                    
+                    // General Education Info
+                    if (donor.subject != null && donor.subject!.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _buildInfoItem(Icons.book, 'Subject/Department', donor.subject!),
+                    ],
+                    if (donor.session != null && donor.session!.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _buildInfoItem(Icons.date_range, 'Session', donor.session!),
+                    ],
+                    
+                    // Lower Class Information
+                    if ((donor.highestEducationLevel == 'Lower Class' || 
+                        AppConstants.educationLevels.indexOf(donor.highestEducationLevel ?? '') > 
+                        AppConstants.educationLevels.indexOf('Lower Class'))) ...[
+                      if (donor.lowerClassName != null && donor.lowerClassName!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.school, 'Class', donor.lowerClassName!),
+                      ],
+                      if (donor.lowerClassSchool != null && donor.lowerClassSchool!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.school, 'School', donor.lowerClassSchool!),
+                      ],
+                      if (donor.lowerClassYear != null && donor.lowerClassYear!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'Year', donor.lowerClassYear!),
+                      ],
+                    ],
+                    
+                    // SSC Information
+                    if ((donor.highestEducationLevel == 'SSC' || 
+                        AppConstants.educationLevels.indexOf(donor.highestEducationLevel ?? '') > 
+                        AppConstants.educationLevels.indexOf('SSC'))) ...[
+                      if (donor.sscSchool != null && donor.sscSchool!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.school, 'SSC School', donor.sscSchool!),
+                      ],
+                      if (donor.sscYear != null && donor.sscYear!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'SSC Year', donor.sscYear!),
+                      ],
+                      if (donor.sscSession != null && donor.sscSession!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'SSC Session', donor.sscSession!),
+                      ],
+                    ],
+                    
+                    // HSC Information
+                    if ((donor.highestEducationLevel == 'HSC' || 
+                        AppConstants.educationLevels.indexOf(donor.highestEducationLevel ?? '') > 
+                        AppConstants.educationLevels.indexOf('HSC'))) ...[
+                      if (donor.hscCollege != null && donor.hscCollege!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.school, 'HSC College', donor.hscCollege!),
+                      ],
+                      if (donor.hscYear != null && donor.hscYear!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'HSC Year', donor.hscYear!),
+                      ],
+                      if (donor.hscSession != null && donor.hscSession!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'HSC Session', donor.hscSession!),
+                      ],
+                    ],
+                    
+                    // Honours Information
+                    if ((donor.highestEducationLevel == 'Honours' || 
+                        AppConstants.educationLevels.indexOf(donor.highestEducationLevel ?? '') > 
+                        AppConstants.educationLevels.indexOf('Honours'))) ...[
+                      if (donor.honorsInstitution != null && donor.honorsInstitution!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.school, 'Honours Institution', donor.honorsInstitution!),
+                      ],
+                      if (donor.honorsSubject != null && donor.honorsSubject!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.book, 'Honours Subject', donor.honorsSubject!),
+                      ],
+                      if (donor.honorsSession != null && donor.honorsSession!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'Honours Session', donor.honorsSession!),
+                      ],
+                      if (donor.honorsYear != null && donor.honorsYear!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'Honours Year', donor.honorsYear!),
+                      ],
+                      if (donor.honorsInstitutionBatch != null && donor.honorsInstitutionBatch!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.people, 'Honours Institution Batch', donor.honorsInstitutionBatch!),
+                      ],
+                      if (donor.honorsSubjectBatch != null && donor.honorsSubjectBatch!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.people, 'Honours Subject Batch', donor.honorsSubjectBatch!),
+                      ],
+                    ],
+                    
+                    // Masters Information
+                    if ((donor.highestEducationLevel == 'Masters' || 
+                        AppConstants.educationLevels.indexOf(donor.highestEducationLevel ?? '') > 
+                        AppConstants.educationLevels.indexOf('Masters'))) ...[
+                      if (donor.mastersInstitution != null && donor.mastersInstitution!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.school, 'Masters Institution', donor.mastersInstitution!),
+                      ],
+                      if (donor.mastersSubject != null && donor.mastersSubject!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.book, 'Masters Subject', donor.mastersSubject!),
+                      ],
+                      if (donor.mastersSession != null && donor.mastersSession!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'Masters Session', donor.mastersSession!),
+                      ],
+                      if (donor.mastersYear != null && donor.mastersYear!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.calendar_today, 'Masters Year', donor.mastersYear!),
+                      ],
+                      if (donor.mastersInstitutionBatch != null && donor.mastersInstitutionBatch!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.people, 'Masters Institution Batch', donor.mastersInstitutionBatch!),
+                      ],
+                      if (donor.mastersSubjectBatch != null && donor.mastersSubjectBatch!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _buildInfoItem(Icons.people, 'Masters Subject Batch', donor.mastersSubjectBatch!),
+                      ],
+                    ],
                   ],
                 ),
               ),

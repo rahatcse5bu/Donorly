@@ -120,24 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
         bloodGroup: _selectedBloodGroup,
         institution: _selectedInstitution,
         subject: _selectedSubject,
-        batchNumber: _batchNumberController.text.trim(),
-        session: _sessionController.text.trim(),
-        hscSession: _hscSessionController.text.trim(),
         donationInterestLevel: _selectedInterestLevel,
-        hscCollege: _selectedHscCollege,
-        hscYear: _hscYearController.text.trim(),
-        honorsInstitution: _selectedHonorsInstitution,
-        honorsSubject: _selectedHonorsSubject,
-        honorsSession: _honorsSessionController.text.trim(),
-        honorsYear: _honorsYearController.text.trim(),
-        honorsInstitutionBatch: _honorsInstitutionBatchController.text.trim(),
-        honorsSubjectBatch: _honorsSubjectBatchController.text.trim(),
-        mastersInstitution: _selectedMastersInstitution,
-        mastersSubject: _selectedMastersSubject,
-        mastersSession: _mastersSessionController.text.trim(),
-        mastersYear: _mastersYearController.text.trim(),
-        mastersInstitutionBatch: _mastersInstitutionBatchController.text.trim(),
-        mastersSubjectBatch: _mastersSubjectBatchController.text.trim(),
         donationAreaPreferences: _selectedDonationDivision != null
           ? {
               'division': [_selectedDonationDivision!],
@@ -165,24 +148,7 @@ class _SearchScreenState extends State<SearchScreen> {
     _areaController.clear();
     _selectedInstitution = null;
     _selectedSubject = null;
-    _batchNumberController.clear();
-    _sessionController.clear();
-    _hscSessionController.clear();
     _selectedInterestLevel = null;
-    _selectedHscCollege = null;
-    _hscYearController.clear();
-    _selectedHonorsInstitution = null;
-    _selectedHonorsSubject = null;
-    _honorsSessionController.clear();
-    _honorsYearController.clear();
-    _honorsInstitutionBatchController.clear();
-    _honorsSubjectBatchController.clear();
-    _selectedMastersInstitution = null;
-    _selectedMastersSubject = null;
-    _mastersSessionController.clear();
-    _mastersYearController.clear();
-    _mastersInstitutionBatchController.clear();
-    _mastersSubjectBatchController.clear();
     _selectedDonationDivision = null;
     _selectedDonationDistrict = null;
     _selectedDonationUpazila = null;
@@ -454,10 +420,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                       label: 'Donation Interest Level',
                                       hint: 'Select level',
                                       value: _selectedInterestLevel,
-                                      items: AppConstants.interestLevels,
+                                      items: ['Any', ...AppConstants.interestLevels],
                                       onChanged: (value) {
                                         setModalState(() {
-                                          _selectedInterestLevel = value;
+                                          if (value == 'Any') {
+                                            _selectedInterestLevel = null;
+                                          } else {
+                                            _selectedInterestLevel = value;
+                                          }
                                         });
                                       },
                                     ),
@@ -479,18 +449,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                   label: 'Division',
                                   hint: 'Select division',
                                   value: _selectedDivision,
-                                  items: AppConstants.divisions,
+                                  items: ['Any', ...AppConstants.divisions],
                                   onChanged: (value) {
                                     setModalState(() {
-                                      _selectedDivision = value;
+                                      if (value == 'Any') {
+                                        _selectedDivision = null;
+                                        _availableDistricts = [];
+                                      } else {
+                                        _selectedDivision = value;
+                                        _availableDistricts = AppConstants.districtsByDivision[value] ?? [];
+                                      }
                                       _selectedDistrict = null;
                                       _selectedUpazila = null;
                                       _availableUpazilas = [];
-                                      if (value != null) {
-                                        _availableDistricts = AppConstants.districtsByDivision[value] ?? [];
-                                      } else {
-                                        _availableDistricts = [];
-                                      }
                                     });
                                   },
                                 ),
@@ -503,17 +474,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ? 'Select division first' 
                                       : 'Select district',
                                   value: _selectedDistrict,
-                                  items: _availableDistricts,
+                                  items: _selectedDivision == null ? [] : ['Any', ..._availableDistricts],
                                   isEnabled: _selectedDivision != null,
                                   onChanged: (value) {
                                     setModalState(() {
-                                      _selectedDistrict = value;
-                                      _selectedUpazila = null;
-                                      if (value != null) {
-                                        _availableUpazilas = AppConstants.upazilasByDistrict[value] ?? [];
-                                      } else {
+                                      if (value == 'Any') {
+                                        _selectedDistrict = null;
                                         _availableUpazilas = [];
+                                      } else {
+                                        _selectedDistrict = value;
+                                        _availableUpazilas = AppConstants.upazilasByDistrict[value] ?? [];
                                       }
+                                      _selectedUpazila = null;
                                     });
                                   },
                                 ),
@@ -530,11 +502,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ? 'Select district first' 
                                       : 'Select upazila',
                                   value: _selectedUpazila,
-                                  items: _availableUpazilas,
+                                  items: _selectedDistrict == null ? [] : ['Any', ..._availableUpazilas],
                                   isEnabled: _selectedDistrict != null,
                                   onChanged: (value) {
                                     setModalState(() {
-                                      _selectedUpazila = value;
+                                      if (value == 'Any') {
+                                        _selectedUpazila = null;
+                                      } else {
+                                        _selectedUpazila = value;
+                                      }
                                     });
                                   },
                                 ),
@@ -586,205 +562,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               });
                             },
                           ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Batch Number',
-                                  hint: 'Enter batch number',
-                                  controller: _batchNumberController,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Session',
-                                  hint: 'e.g., 2018-19',
-                                  controller: _sessionController,
-                                ),
-                              ),
-                            ],
-                          ),
-                          
-                          const SizedBox(height: 24),
-                          
-                          // HSC Information
-                          _buildSectionHeader('HSC Information'),
-                          const SizedBox(height: 16),
-                          SearchableDropdown(
-                            label: 'College',
-                            hint: 'Search college',
-                            value: _selectedHscCollege,
-                            items: AppConstants.educationalInstitutions,
-                            onChanged: (value) {
-                              setModalState(() {
-                                _selectedHscCollege = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'HSC Session',
-                                  hint: 'e.g., 2016',
-                                  controller: _hscSessionController,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Year',
-                                  hint: 'e.g., 2018',
-                                  controller: _hscYearController,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
-                          
-                          const SizedBox(height: 24),
-                          
-                          // Honours Information
-                          _buildSectionHeader('Honours Information'),
-                          const SizedBox(height: 16),
-                          SearchableDropdown(
-                            label: 'Institution',
-                            hint: 'Search institution',
-                            value: _selectedHonorsInstitution,
-                            items: AppConstants.educationalInstitutions,
-                            onChanged: (value) {
-                              setModalState(() {
-                                _selectedHonorsInstitution = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          SearchableDropdown(
-                            label: 'Subject',
-                            hint: 'Search subject',
-                            value: _selectedHonorsSubject,
-                            items: AppConstants.academicSubjects,
-                            onChanged: (value) {
-                              setModalState(() {
-                                _selectedHonorsSubject = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Session',
-                                  hint: 'e.g., 2018-22',
-                                  controller: _honorsSessionController,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Year',
-                                  hint: 'e.g., 2022',
-                                  controller: _honorsYearController,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Institution Batch',
-                                  hint: 'Enter batch',
-                                  controller: _honorsInstitutionBatchController,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Subject Batch',
-                                  hint: 'Enter batch',
-                                  controller: _honorsSubjectBatchController,
-                                ),
-                              ),
-                            ],
-                          ),
-                          
-                          const SizedBox(height: 24),
-                          
-                          // Masters Information
-                          _buildSectionHeader('Masters Information'),
-                          const SizedBox(height: 16),
-                          SearchableDropdown(
-                            label: 'Institution',
-                            hint: 'Search institution',
-                            value: _selectedMastersInstitution,
-                            items: AppConstants.educationalInstitutions,
-                            onChanged: (value) {
-                              setModalState(() {
-                                _selectedMastersInstitution = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          SearchableDropdown(
-                            label: 'Subject',
-                            hint: 'Search subject',
-                            value: _selectedMastersSubject,
-                            items: AppConstants.academicSubjects,
-                            onChanged: (value) {
-                              setModalState(() {
-                                _selectedMastersSubject = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Session',
-                                  hint: 'e.g., 2022-23',
-                                  controller: _mastersSessionController,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Year',
-                                  hint: 'e.g., 2023',
-                                  controller: _mastersYearController,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Institution Batch',
-                                  hint: 'Enter batch',
-                                  controller: _mastersInstitutionBatchController,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: CustomTextField(
-                                  label: 'Subject Batch',
-                                  hint: 'Enter batch',
-                                  controller: _mastersSubjectBatchController,
-                                ),
-                              ),
-                            ],
-                          ),
                           
                           const SizedBox(height: 24),
                           
@@ -798,18 +575,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                   label: 'Division',
                                   hint: 'Select division',
                                   value: _selectedDonationDivision,
-                                  items: AppConstants.divisions,
+                                  items: ['Any', ...AppConstants.divisions],
                                   onChanged: (value) {
                                     setModalState(() {
-                                      _selectedDonationDivision = value;
+                                      if (value == 'Any') {
+                                        _selectedDonationDivision = null;
+                                        _availableDonationDistricts = [];
+                                      } else {
+                                        _selectedDonationDivision = value;
+                                        _availableDonationDistricts = AppConstants.districtsByDivision[value] ?? [];
+                                      }
                                       _selectedDonationDistrict = null;
                                       _selectedDonationUpazila = null;
                                       _availableDonationUpazilas = [];
-                                      if (value != null) {
-                                        _availableDonationDistricts = AppConstants.districtsByDivision[value] ?? [];
-                                      } else {
-                                        _availableDonationDistricts = [];
-                                      }
                                     });
                                   },
                                 ),
@@ -822,17 +600,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ? 'Select division first' 
                                       : 'Select district',
                                   value: _selectedDonationDistrict,
-                                  items: _availableDonationDistricts,
+                                  items: _selectedDonationDivision == null ? [] : ['Any', ..._availableDonationDistricts],
                                   isEnabled: _selectedDonationDivision != null,
                                   onChanged: (value) {
                                     setModalState(() {
-                                      _selectedDonationDistrict = value;
-                                      _selectedDonationUpazila = null;
-                                      if (value != null) {
-                                        _availableDonationUpazilas = AppConstants.upazilasByDistrict[value] ?? [];
-                                      } else {
+                                      if (value == 'Any') {
+                                        _selectedDonationDistrict = null;
                                         _availableDonationUpazilas = [];
+                                      } else {
+                                        _selectedDonationDistrict = value;
+                                        _availableDonationUpazilas = AppConstants.upazilasByDistrict[value] ?? [];
                                       }
+                                      _selectedDonationUpazila = null;
                                     });
                                   },
                                 ),
@@ -849,11 +628,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ? 'Select district first' 
                                       : 'Select upazila',
                                   value: _selectedDonationUpazila,
-                                  items: _availableDonationUpazilas,
+                                  items: _selectedDonationDistrict == null ? [] : ['Any', ..._availableDonationUpazilas],
                                   isEnabled: _selectedDonationDistrict != null,
                                   onChanged: (value) {
                                     setModalState(() {
-                                      _selectedDonationUpazila = value;
+                                      if (value == 'Any') {
+                                        _selectedDonationUpazila = null;
+                                      } else {
+                                        _selectedDonationUpazila = value;
+                                      }
                                     });
                                   },
                                 ),

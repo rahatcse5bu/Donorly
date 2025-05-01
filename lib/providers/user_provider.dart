@@ -120,6 +120,39 @@ class UserProvider with ChangeNotifier {
     List<String>? preferableAreas,
     Map<String, bool>? privacySettings,
     Map<String, List<String>>? locations,
+    String? subject,
+    String? batchNumber,
+    String? session,
+    String? donationInterestLevel,
+    String? highestEducationLevel,
+    
+    // Lower Class Information
+    String? lowerClassName,
+    String? lowerClassSchool,
+    String? lowerClassYear,
+    
+    // SSC Information
+    String? sscSchool,
+    String? sscYear,
+    String? sscSession,
+    
+    // HSC Information
+    String? hscCollege,
+    String? hscYear,
+    String? hscSession,
+    String? honorsInstitution,
+    String? honorsSubject,
+    String? honorsSession,
+    String? honorsYear,
+    String? honorsInstitutionBatch,
+    String? honorsSubjectBatch,
+    String? mastersInstitution,
+    String? mastersSubject,
+    String? mastersSession,
+    String? mastersYear,
+    String? mastersInstitutionBatch,
+    String? mastersSubjectBatch,
+    Map<String, List<String>>? donationAreaPreferences,
   }) async {
     if (_currentUser == null) return false;
     
@@ -139,6 +172,33 @@ class UserProvider with ChangeNotifier {
         preferableAreas: preferableAreas,
         privacySettings: privacySettings,
         locations: locations,
+        subject: subject,
+        batchNumber: batchNumber,
+        session: session,
+        donationInterestLevel: donationInterestLevel,
+        highestEducationLevel: highestEducationLevel,
+        lowerClassName: lowerClassName,
+        lowerClassSchool: lowerClassSchool,
+        lowerClassYear: lowerClassYear,
+        sscSchool: sscSchool,
+        sscYear: sscYear,
+        sscSession: sscSession,
+        hscCollege: hscCollege,
+        hscYear: hscYear,
+        hscSession: hscSession,
+        honorsInstitution: honorsInstitution,
+        honorsSubject: honorsSubject,
+        honorsSession: honorsSession,
+        honorsYear: honorsYear,
+        honorsInstitutionBatch: honorsInstitutionBatch,
+        honorsSubjectBatch: honorsSubjectBatch,
+        mastersInstitution: mastersInstitution,
+        mastersSubject: mastersSubject,
+        mastersSession: mastersSession,
+        mastersYear: mastersYear,
+        mastersInstitutionBatch: mastersInstitutionBatch,
+        mastersSubjectBatch: mastersSubjectBatch,
+        donationAreaPreferences: donationAreaPreferences,
       );
       
       await _authService.updateUserProfile(updatedUser);

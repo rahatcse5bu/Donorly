@@ -25,6 +25,17 @@ class UserModel {
   
   // New fields
   final String? donationInterestLevel;
+  final String? highestEducationLevel; // Lower Class, SSC, HSC, Honours, Masters, PhD
+  
+  // SSC Information
+  final String? sscSchool;
+  final String? sscYear;
+  final String? sscSession;
+  
+  // Lower Class Information
+  final String? lowerClassName; // e.g., Class 8, 9, etc.
+  final String? lowerClassSchool;
+  final String? lowerClassYear;
   
   // HSC Information
   final String? hscCollege;
@@ -70,6 +81,13 @@ class UserModel {
     this.session,
     this.hscSession,
     this.donationInterestLevel,
+    this.highestEducationLevel,
+    this.sscSchool,
+    this.sscYear,
+    this.sscSession,
+    this.lowerClassName,
+    this.lowerClassSchool,
+    this.lowerClassYear,
     this.hscCollege,
     this.hscYear,
     this.honorsInstitution,
@@ -110,6 +128,13 @@ class UserModel {
       'session': session,
       'hscSession': hscSession,
       'donationInterestLevel': donationInterestLevel,
+      'highestEducationLevel': highestEducationLevel,
+      'sscSchool': sscSchool,
+      'sscYear': sscYear,
+      'sscSession': sscSession,
+      'lowerClassName': lowerClassName,
+      'lowerClassSchool': lowerClassSchool,
+      'lowerClassYear': lowerClassYear,
       'hscCollege': hscCollege,
       'hscYear': hscYear,
       'honorsInstitution': honorsInstitution,
@@ -160,6 +185,13 @@ class UserModel {
       session: map['session'],
       hscSession: map['hscSession'],
       donationInterestLevel: map['donationInterestLevel'],
+      highestEducationLevel: map['highestEducationLevel'],
+      sscSchool: map['sscSchool'],
+      sscYear: map['sscYear'],
+      sscSession: map['sscSession'],
+      lowerClassName: map['lowerClassName'],
+      lowerClassSchool: map['lowerClassSchool'],
+      lowerClassYear: map['lowerClassYear'],
       hscCollege: map['hscCollege'],
       hscYear: map['hscYear'],
       honorsInstitution: map['honorsInstitution'],
@@ -218,6 +250,13 @@ class UserModel {
     String? session,
     String? hscSession,
     String? donationInterestLevel,
+    String? highestEducationLevel,
+    String? sscSchool,
+    String? sscYear,
+    String? sscSession,
+    String? lowerClassName,
+    String? lowerClassSchool,
+    String? lowerClassYear,
     String? hscCollege,
     String? hscYear,
     String? honorsInstitution,
@@ -255,6 +294,13 @@ class UserModel {
       session: session ?? this.session,
       hscSession: hscSession ?? this.hscSession,
       donationInterestLevel: donationInterestLevel ?? this.donationInterestLevel,
+      highestEducationLevel: highestEducationLevel ?? this.highestEducationLevel,
+      sscSchool: sscSchool ?? this.sscSchool,
+      sscYear: sscYear ?? this.sscYear,
+      sscSession: sscSession ?? this.sscSession,
+      lowerClassName: lowerClassName ?? this.lowerClassName,
+      lowerClassSchool: lowerClassSchool ?? this.lowerClassSchool,
+      lowerClassYear: lowerClassYear ?? this.lowerClassYear,
       hscCollege: hscCollege ?? this.hscCollege,
       hscYear: hscYear ?? this.hscYear,
       honorsInstitution: honorsInstitution ?? this.honorsInstitution,
