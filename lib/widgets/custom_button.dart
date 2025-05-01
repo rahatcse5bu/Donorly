@@ -11,6 +11,7 @@ class CustomButton extends StatelessWidget {
   final double borderRadius;
   final Color? backgroundColor;
   final Color? textColor;
+  final IconData? icon;
 
   const CustomButton({
     super.key,
@@ -23,6 +24,7 @@ class CustomButton extends StatelessWidget {
     this.borderRadius = 8.0,
     this.backgroundColor,
     this.textColor,
+    this.icon,
   });
 
   @override
@@ -55,24 +57,46 @@ class CustomButton extends StatelessWidget {
   }
 
   Widget _buildChild() {
-    return isLoading
-        ? const SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          )
-        : Text(
+    if (isLoading) {
+      return const SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
+      );
+    }
+    
+    final textColor = isOutlined
+        ? (this.textColor ?? AppConstants.primaryColor)
+        : (this.textColor ?? Colors.white);
+    
+    if (icon != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: textColor, size: 18),
+          const SizedBox(width: 8),
+          Text(
             text,
             style: TextStyle(
-              color: isOutlined
-                  ? (textColor ?? AppConstants.primaryColor)
-                  : (textColor ?? Colors.white),
+              color: textColor,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
-          );
+          ),
+        ],
+      );
+    }
+    
+    return Text(
+      text,
+      style: TextStyle(
+        color: textColor,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
 } 

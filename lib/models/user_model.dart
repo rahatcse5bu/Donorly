@@ -15,7 +15,39 @@ class UserModel {
   final Timestamp lastDonated;
   final int donationCount;
   final Map<String, bool> privacySettings;
-  final Map<String, List<String>> locations; // division, district, city, area
+  final Map<String, List<String>> locations; // division, district, city, area, upazila
+  
+  // Education fields
+  final String? subject;
+  final String? batchNumber;
+  final String? session;
+  final String? hscSession;
+  
+  // New fields
+  final String? donationInterestLevel;
+  
+  // HSC Information
+  final String? hscCollege;
+  final String? hscYear;
+  
+  // Honours Information
+  final String? honorsInstitution;
+  final String? honorsSubject;
+  final String? honorsSession;
+  final String? honorsYear;
+  final String? honorsInstitutionBatch;
+  final String? honorsSubjectBatch;
+  
+  // Masters Information
+  final String? mastersInstitution;
+  final String? mastersSubject;
+  final String? mastersSession;
+  final String? mastersYear;
+  final String? mastersInstitutionBatch;
+  final String? mastersSubjectBatch;
+  
+  // Donation area preferences
+  final Map<String, List<String>>? donationAreaPreferences;
 
   UserModel({
     required this.uid,
@@ -33,6 +65,26 @@ class UserModel {
     required this.donationCount,
     required this.privacySettings,
     required this.locations,
+    this.subject,
+    this.batchNumber,
+    this.session,
+    this.hscSession,
+    this.donationInterestLevel,
+    this.hscCollege,
+    this.hscYear,
+    this.honorsInstitution,
+    this.honorsSubject,
+    this.honorsSession,
+    this.honorsYear,
+    this.honorsInstitutionBatch,
+    this.honorsSubjectBatch,
+    this.mastersInstitution,
+    this.mastersSubject,
+    this.mastersSession,
+    this.mastersYear,
+    this.mastersInstitutionBatch,
+    this.mastersSubjectBatch,
+    this.donationAreaPreferences,
   });
 
   // Convert User object to a Map (for sending to Firestore)
@@ -53,6 +105,26 @@ class UserModel {
       'donationCount': donationCount,
       'privacySettings': privacySettings,
       'locations': locations,
+      'subject': subject,
+      'batchNumber': batchNumber,
+      'session': session,
+      'hscSession': hscSession,
+      'donationInterestLevel': donationInterestLevel,
+      'hscCollege': hscCollege,
+      'hscYear': hscYear,
+      'honorsInstitution': honorsInstitution,
+      'honorsSubject': honorsSubject,
+      'honorsSession': honorsSession,
+      'honorsYear': honorsYear,
+      'honorsInstitutionBatch': honorsInstitutionBatch,
+      'honorsSubjectBatch': honorsSubjectBatch,
+      'mastersInstitution': mastersInstitution,
+      'mastersSubject': mastersSubject,
+      'mastersSession': mastersSession,
+      'mastersYear': mastersYear,
+      'mastersInstitutionBatch': mastersInstitutionBatch,
+      'mastersSubjectBatch': mastersSubjectBatch,
+      'donationAreaPreferences': donationAreaPreferences,
     };
   }
 
@@ -83,6 +155,32 @@ class UserModel {
             ) ??
             {},
       ),
+      subject: map['subject'],
+      batchNumber: map['batchNumber'],
+      session: map['session'],
+      hscSession: map['hscSession'],
+      donationInterestLevel: map['donationInterestLevel'],
+      hscCollege: map['hscCollege'],
+      hscYear: map['hscYear'],
+      honorsInstitution: map['honorsInstitution'],
+      honorsSubject: map['honorsSubject'],
+      honorsSession: map['honorsSession'],
+      honorsYear: map['honorsYear'],
+      honorsInstitutionBatch: map['honorsInstitutionBatch'],
+      honorsSubjectBatch: map['honorsSubjectBatch'],
+      mastersInstitution: map['mastersInstitution'],
+      mastersSubject: map['mastersSubject'],
+      mastersSession: map['mastersSession'],
+      mastersYear: map['mastersYear'],
+      mastersInstitutionBatch: map['mastersInstitutionBatch'],
+      mastersSubjectBatch: map['mastersSubjectBatch'],
+      donationAreaPreferences: map['donationAreaPreferences'] != null
+          ? Map<String, List<String>>.from(
+              map['donationAreaPreferences'].map(
+                (key, value) => MapEntry(key, List<String>.from(value)),
+              ),
+            )
+          : null,
     );
   }
 
@@ -115,6 +213,26 @@ class UserModel {
     int? donationCount,
     Map<String, bool>? privacySettings,
     Map<String, List<String>>? locations,
+    String? subject,
+    String? batchNumber,
+    String? session,
+    String? hscSession,
+    String? donationInterestLevel,
+    String? hscCollege,
+    String? hscYear,
+    String? honorsInstitution,
+    String? honorsSubject,
+    String? honorsSession,
+    String? honorsYear,
+    String? honorsInstitutionBatch,
+    String? honorsSubjectBatch,
+    String? mastersInstitution,
+    String? mastersSubject,
+    String? mastersSession,
+    String? mastersYear,
+    String? mastersInstitutionBatch,
+    String? mastersSubjectBatch,
+    Map<String, List<String>>? donationAreaPreferences,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -132,6 +250,26 @@ class UserModel {
       donationCount: donationCount ?? this.donationCount,
       privacySettings: privacySettings ?? this.privacySettings,
       locations: locations ?? this.locations,
+      subject: subject ?? this.subject,
+      batchNumber: batchNumber ?? this.batchNumber,
+      session: session ?? this.session,
+      hscSession: hscSession ?? this.hscSession,
+      donationInterestLevel: donationInterestLevel ?? this.donationInterestLevel,
+      hscCollege: hscCollege ?? this.hscCollege,
+      hscYear: hscYear ?? this.hscYear,
+      honorsInstitution: honorsInstitution ?? this.honorsInstitution,
+      honorsSubject: honorsSubject ?? this.honorsSubject,
+      honorsSession: honorsSession ?? this.honorsSession,
+      honorsYear: honorsYear ?? this.honorsYear,
+      honorsInstitutionBatch: honorsInstitutionBatch ?? this.honorsInstitutionBatch,
+      honorsSubjectBatch: honorsSubjectBatch ?? this.honorsSubjectBatch,
+      mastersInstitution: mastersInstitution ?? this.mastersInstitution,
+      mastersSubject: mastersSubject ?? this.mastersSubject,
+      mastersSession: mastersSession ?? this.mastersSession,
+      mastersYear: mastersYear ?? this.mastersYear,
+      mastersInstitutionBatch: mastersInstitutionBatch ?? this.mastersInstitutionBatch,
+      mastersSubjectBatch: mastersSubjectBatch ?? this.mastersSubjectBatch,
+      donationAreaPreferences: donationAreaPreferences ?? this.donationAreaPreferences,
     );
   }
 } 

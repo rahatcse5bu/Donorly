@@ -99,8 +99,29 @@ class DonationService {
     String? district,
     String? city,
     String? area,
+    String? upazila,
     String? bloodGroup,
     String? institution,
+    String? subject,
+    String? batchNumber,
+    String? session,
+    String? hscSession,
+    String? donationInterestLevel,
+    String? hscCollege,
+    String? hscYear,
+    String? honorsInstitution,
+    String? honorsSubject,
+    String? honorsSession,
+    String? honorsYear,
+    String? honorsInstitutionBatch,
+    String? honorsSubjectBatch,
+    String? mastersInstitution,
+    String? mastersSubject,
+    String? mastersSession,
+    String? mastersYear,
+    String? mastersInstitutionBatch,
+    String? mastersSubjectBatch,
+    Map<String, List<String>>? donationAreaPreferences,
   }) async {
     Query query = _usersCollection;
     
@@ -113,11 +134,18 @@ class DonationService {
       query = query.where('institution', isEqualTo: institution);
     }
     
+    if (donationInterestLevel != null && donationInterestLevel.isNotEmpty) {
+      query = query.where('donationInterestLevel', isEqualTo: donationInterestLevel);
+    }
+    
     // Location filters - we can't directly query nested fields with equality operators,
     // so we need to use array-contains-any or do filtering in the app
     if (division != null && division.isNotEmpty) {
       query = query.where('locations.division', arrayContains: division);
     }
+    
+    // Note: Firestore has limitations on how many compound queries can be combined
+    // We'll apply the rest of the filters in memory after getting the results
     
     final querySnapshot = await query.get();
     
@@ -137,6 +165,118 @@ class DonationService {
     
     if (area != null && area.isNotEmpty) {
       users = users.where((user) => user.locations['area']?.contains(area) ?? false).toList();
+    }
+    
+    if (upazila != null && upazila.isNotEmpty) {
+      users = users.where((user) => user.locations['upazila']?.contains(upazila) ?? false).toList();
+    }
+    
+    // Apply education filters
+    if (subject != null && subject.isNotEmpty) {
+      users = users.where((user) => 
+        user.subject?.toLowerCase() == subject.toLowerCase() ||
+        user.honorsSubject?.toLowerCase() == subject.toLowerCase() ||
+        user.mastersSubject?.toLowerCase() == subject.toLowerCase()
+      ).toList();
+    }
+    
+    if (batchNumber != null && batchNumber.isNotEmpty) {
+      users = users.where((user) => 
+        user.batchNumber == batchNumber ||
+        user.honorsInstitutionBatch == batchNumber ||
+        user.honorsSubjectBatch == batchNumber ||
+        user.mastersInstitutionBatch == batchNumber ||
+        user.mastersSubjectBatch == batchNumber
+      ).toList();
+    }
+    
+    if (session != null && session.isNotEmpty) {
+      users = users.where((user) => 
+        user.session == session ||
+        user.honorsSession == session ||
+        user.mastersSession == session
+      ).toList();
+    }
+    
+    // HSC filters
+    if (hscSession != null && hscSession.isNotEmpty) {
+      users = users.where((user) => user.hscSession == hscSession).toList();
+    }
+    
+    if (hscCollege != null && hscCollege.isNotEmpty) {
+      users = users.where((user) => user.hscCollege == hscCollege).toList();
+    }
+    
+    if (hscYear != null && hscYear.isNotEmpty) {
+      users = users.where((user) => user.hscYear == hscYear).toList();
+    }
+    
+    // Honours filters
+    if (honorsInstitution != null && honorsInstitution.isNotEmpty) {
+      users = users.where((user) => user.honorsInstitution == honorsInstitution).toList();
+    }
+    
+    if (honorsSubject != null && honorsSubject.isNotEmpty) {
+      users = users.where((user) => user.honorsSubject == honorsSubject).toList();
+    }
+    
+    if (honorsSession != null && honorsSession.isNotEmpty) {
+      users = users.where((user) => user.honorsSession == honorsSession).toList();
+    }
+    
+    if (honorsYear != null && honorsYear.isNotEmpty) {
+      users = users.where((user) => user.honorsYear == honorsYear).toList();
+    }
+    
+    if (honorsInstitutionBatch != null && honorsInstitutionBatch.isNotEmpty) {
+      users = users.where((user) => user.honorsInstitutionBatch == honorsInstitutionBatch).toList();
+    }
+    
+    if (honorsSubjectBatch != null && honorsSubjectBatch.isNotEmpty) {
+      users = users.where((user) => user.honorsSubjectBatch == honorsSubjectBatch).toList();
+    }
+    
+    // Masters filters
+    if (mastersInstitution != null && mastersInstitution.isNotEmpty) {
+      users = users.where((user) => user.mastersInstitution == mastersInstitution).toList();
+    }
+    
+    if (mastersSubject != null && mastersSubject.isNotEmpty) {
+      users = users.where((user) => user.mastersSubject == mastersSubject).toList();
+    }
+    
+    if (mastersSession != null && mastersSession.isNotEmpty) {
+      users = users.where((user) => user.mastersSession == mastersSession).toList();
+    }
+    
+    if (mastersYear != null && mastersYear.isNotEmpty) {
+      users = users.where((user) => user.mastersYear == mastersYear).toList();
+    }
+    
+    if (mastersInstitutionBatch != null && mastersInstitutionBatch.isNotEmpty) {
+      users = users.where((user) => user.mastersInstitutionBatch == mastersInstitutionBatch).toList();
+    }
+    
+    if (mastersSubjectBatch != null && mastersSubjectBatch.isNotEmpty) {
+      users = users.where((user) => user.mastersSubjectBatch == mastersSubjectBatch).toList();
+    }
+    
+    // Donation area preferences filtering
+    if (donationAreaPreferences != null && donationAreaPreferences.isNotEmpty) {
+      for (final entry in donationAreaPreferences.entries) {
+        final key = entry.key;
+        final values = entry.value;
+        
+        if (values.isEmpty) continue;
+        
+        users = users.where((user) {
+          final userPrefs = user.donationAreaPreferences?[key];
+          if (userPrefs == null || userPrefs.isEmpty) return false;
+          
+          // Check if any of the user's preferences match the search criteria
+          return userPrefs.any((pref) => values.contains(pref));
+        }).toList();
+      }
     }
     
     return users;
