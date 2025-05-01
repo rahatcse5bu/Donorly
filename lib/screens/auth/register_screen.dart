@@ -4,6 +4,7 @@ import '../../constants/app_constants.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/custom_dropdown.dart';
 import '../home/home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -30,10 +31,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   int _currentStep = 0;
   
   // Location details
-  final _divisionController = TextEditingController();
-  final _districtController = TextEditingController();
-  final _cityController = TextEditingController();
+  String? _selectedDivision;
+  String? _selectedDistrict;
+  String? _selectedUpazila;
+  String? _selectedCity;
   final _areaController = TextEditingController();
+  
+  // Available options based on selection
+  List<String> _availableDistricts = [];
+  List<String> _availableUpazilas = [];
+  List<String> _availableCities = [];
   
   @override
   void dispose() {
@@ -46,9 +53,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _institutionController.dispose();
     _presentAddressController.dispose();
     _permanentAddressController.dispose();
-    _divisionController.dispose();
-    _districtController.dispose();
-    _cityController.dispose();
     _areaController.dispose();
     super.dispose();
   }
@@ -59,10 +63,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     
     final Map<String, List<String>> locations = {
-      'division': [_divisionController.text.trim()],
-      'district': [_districtController.text.trim()],
-      'city': [_cityController.text.trim()],
-      'area': [_areaController.text.trim()],
+      'Division': _selectedDivision != null ? [_selectedDivision!] : [],
+      'District': _selectedDistrict != null ? [_selectedDistrict!] : [],
+      'Upazila': _selectedUpazila != null ? [_selectedUpazila!] : [],
+      'City': _selectedCity != null ? [_selectedCity!] : [],
+      'Area': [_areaController.text.trim()],
     };
     
     final success = await userProvider.registerUser(
@@ -107,8 +112,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       return _presentAddressController.text.isNotEmpty && 
         _permanentAddressController.text.isNotEmpty && 
-        _divisionController.text.isNotEmpty && 
-        _districtController.text.isNotEmpty;
+        _selectedDivision != null && 
+        _selectedDistrict != null &&
+        _areaController.text.isNotEmpty;
     }
   }
 
@@ -368,45 +374,93 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  CustomTextField(
+                  CustomDropdown(
                     label: 'Division',
-                    hint: 'Enter your division',
-                    controller: _divisionController,
-                    textCapitalization: TextCapitalization.words,
-                    prefixIcon: Icons.location_city_outlined,
+                    hint: 'Select division',
+                    value: _selectedDivision,
+                    items: AppConstants.divisions,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDivision = value;
+                        _selectedDistrict = null;
+                        _selectedUpazila = null;
+                        _selectedCity = null;
+                        _availableUpazilas = [];
+                        _availableCities = [];
+                        if (value != null) {
+                          _availableDistricts = AppConstants.districtsByDivision[value] ?? [];
+                        } else {
+                          _availableDistricts = [];
+                        }
+                      });
+                    },
+                    isRequired: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your division';
+                        return 'Please select division';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
-                  CustomTextField(
+                  CustomDropdown(
                     label: 'District',
-                    hint: 'Enter your district',
-                    controller: _districtController,
-                    textCapitalization: TextCapitalization.words,
-                    prefixIcon: Icons.location_city_outlined,
+                    hint: _selectedDivision == null 
+                        ? 'Select division first' 
+                        : 'Select district',
+                    value: _selectedDistrict,
+                    items: _availableDistricts,
+                    isEnabled: _selectedDivision != null,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDistrict = value;
+                        _selectedUpazila = null;
+                        _selectedCity = null;
+                        if (value != null) {
+                          _availableUpazilas = AppConstants.upazilasByDistrict[value] ?? [];
+                          _availableCities = AppConstants.citiesByDistrict[value] ?? [];
+                        } else {
+                          _availableUpazilas = [];
+                          _availableCities = [];
+                        }
+                      });
+                    },
+                    isRequired: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your district';
+                        return 'Please select district';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
-                  CustomTextField(
+                  CustomDropdown(
+                    label: 'Upazila',
+                    hint: _selectedDistrict == null 
+                        ? 'Select district first' 
+                        : 'Select upazila',
+                    value: _selectedUpazila,
+                    items: _availableUpazilas,
+                    isEnabled: _selectedDistrict != null,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedUpazila = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  CustomDropdown(
                     label: 'City',
-                    hint: 'Enter your city',
-                    controller: _cityController,
-                    textCapitalization: TextCapitalization.words,
-                    prefixIcon: Icons.location_city_outlined,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your city';
-                      }
-                      return null;
+                    hint: _selectedDistrict == null 
+                        ? 'Select district first' 
+                        : 'Select city',
+                    value: _selectedCity,
+                    items: _availableCities,
+                    isEnabled: _selectedDistrict != null,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCity = value;
+                      });
                     },
                   ),
                   const SizedBox(height: 16),
