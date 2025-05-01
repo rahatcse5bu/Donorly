@@ -4,6 +4,7 @@ import '../../constants/app_constants.dart';
 import '../../providers/user_provider.dart';
 import '../auth/login_screen.dart';
 import '../donation/donation_history_screen.dart';
+import '../profile/profile_screen.dart';
 import '../search/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {

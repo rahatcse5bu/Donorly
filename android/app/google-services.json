@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "784836980732",
+    "project_id": "donorly-bd",
+    "storage_bucket": "donorly-bd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784836980732:android:3b3ce065dfdcaade590c79",
+        "android_client_info": {
+          "package_name": "com.example.donorly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzBN-G_60NIki6_1CFVlbKJdZ6g-21hhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

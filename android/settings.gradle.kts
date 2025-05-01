@@ -22,4 +22,13 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.8.22" apply false
 }
 
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "donorly"
 include(":app")
