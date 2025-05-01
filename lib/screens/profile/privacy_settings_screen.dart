@@ -26,9 +26,13 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
       );
     } else {
       _privacySettings = {
-        'showEmail': false,
+        'showEmail': true,
         'showPhone': true,
         'showWhatsapp': true,
+        'showAddress': true,
+        'showEducation': true,
+        'showOccupation': true,
+        'showDonationHistory': true,
       };
     }
   }

@@ -36,6 +36,10 @@ class AppConstants {
     'showEmail': 'Show Email to Others',
     'showPhone': 'Show Phone Number to Others',
     'showWhatsapp': 'Show WhatsApp Number to Others',
+    'showAddress': 'Show Address Information',
+    'showEducation': 'Show Education Information',
+    'showOccupation': 'Show Occupation Information',
+    'showDonationHistory': 'Show Donation History'
   };
 
   // Donation Eligibility Time Period (in months)

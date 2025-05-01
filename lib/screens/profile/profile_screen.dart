@@ -416,9 +416,13 @@ class ProfileScreen extends StatelessWidget {
               context,
               'Privacy Settings',
               [
-                _buildPrivacyItem('Show Email', user.privacySettings['showEmail'] ?? false),
+                _buildPrivacyItem('Show Email', user.privacySettings['showEmail'] ?? true),
                 _buildPrivacyItem('Show Phone', user.privacySettings['showPhone'] ?? true),
                 _buildPrivacyItem('Show WhatsApp', user.privacySettings['showWhatsapp'] ?? true),
+                _buildPrivacyItem('Show Address', user.privacySettings['showAddress'] ?? true),
+                _buildPrivacyItem('Show Education', user.privacySettings['showEducation'] ?? true),
+                _buildPrivacyItem('Show Occupation', user.privacySettings['showOccupation'] ?? true),
+                _buildPrivacyItem('Show Donation History', user.privacySettings['showDonationHistory'] ?? true),
               ],
             ),
             

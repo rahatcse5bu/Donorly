@@ -18,8 +18,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  // Enable persistence for Firebase Auth
-  await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  // Firebase Auth persistence is handled automatically on mobile platforms
+  // No need to call setPersistence() as it's only available on web
   
   runApp(const MyApp());
 }

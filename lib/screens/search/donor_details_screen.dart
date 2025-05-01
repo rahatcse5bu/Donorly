@@ -445,10 +445,6 @@ class DonorDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         _buildInfoItem(Icons.book, 'Honours Subject', donor.honorsSubject!),
                       ],
-                      if (donor.honorsSession != null && donor.honorsSession!.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _buildInfoItem(Icons.calendar_today, 'Honours Session', donor.honorsSession!),
-                      ],
                       if (donor.honorsYear != null && donor.honorsYear!.isNotEmpty) ...[
                         const SizedBox(height: 12),
                         _buildInfoItem(Icons.calendar_today, 'Honours Year', donor.honorsYear!),
@@ -474,10 +470,6 @@ class DonorDetailsScreen extends StatelessWidget {
                       if (donor.mastersSubject != null && donor.mastersSubject!.isNotEmpty) ...[
                         const SizedBox(height: 12),
                         _buildInfoItem(Icons.book, 'Masters Subject', donor.mastersSubject!),
-                      ],
-                      if (donor.mastersSession != null && donor.mastersSession!.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _buildInfoItem(Icons.calendar_today, 'Masters Session', donor.mastersSession!),
                       ],
                       if (donor.mastersYear != null && donor.mastersYear!.isNotEmpty) ...[
                         const SizedBox(height: 12),
