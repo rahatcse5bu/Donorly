@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_constants.dart';
+import '../../constants/location_data.dart';
 import '../../providers/donation_provider.dart';
 import '../../providers/user_provider.dart';
+import '../../utils/contact_utils.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/searchable_dropdown.dart';
 
 class AddDonationScreen extends StatefulWidget {
   const AddDonationScreen({Key? key}) : super(key: key);
@@ -20,14 +23,20 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
   final _addressController = TextEditingController();
   final _receiverNameController = TextEditingController();
   final _receiverContactController = TextEditingController();
+  final _receiverEmailController = TextEditingController();
   final _purposeController = TextEditingController();
-  final _divisionController = TextEditingController();
-  final _districtController = TextEditingController();
-  final _cityController = TextEditingController();
-  final _areaController = TextEditingController();
   
+  String? _selectedDivision;
+  String? _selectedDistrict;
+  String? _selectedCity;
+  String? _selectedUpazila;
   String _selectedBloodGroup = AppConstants.bloodGroups[0];
   DateTime _selectedDate = DateTime.now();
+  
+  // Lists for dropdowns
+  List<String> _districtsList = [];
+  List<String> _citiesList = [];
+  List<String> _upazilasList = [];
   
   @override
   void dispose() {
@@ -35,12 +44,45 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
     _addressController.dispose();
     _receiverNameController.dispose();
     _receiverContactController.dispose();
+    _receiverEmailController.dispose();
     _purposeController.dispose();
-    _divisionController.dispose();
-    _districtController.dispose();
-    _cityController.dispose();
-    _areaController.dispose();
     super.dispose();
+  }
+
+  // Update districts when division changes
+  void _onDivisionChanged(String? division) {
+    setState(() {
+      _selectedDivision = division;
+      _selectedDistrict = null;
+      _selectedCity = null;
+      _selectedUpazila = null;
+      
+      // Update districts list based on selected division
+      _districtsList = division != null 
+          ? LocationData.getDistrictsForDivision(division)
+          : [];
+      
+      _citiesList = [];
+      _upazilasList = [];
+    });
+  }
+
+  // Update cities and upazilas when district changes
+  void _onDistrictChanged(String? district) {
+    setState(() {
+      _selectedDistrict = district;
+      _selectedCity = null;
+      _selectedUpazila = null;
+      
+      // Update cities and upazilas lists based on selected district
+      if (district != null) {
+        _citiesList = LocationData.getCitiesForDistrict(district);
+        _upazilasList = LocationData.getUpazilasForDistrict(district);
+      } else {
+        _citiesList = [];
+        _upazilasList = [];
+      }
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -68,6 +110,34 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
     }
   }
 
+  // Show contact options for receiver
+  void _showReceiverContactOptions() {
+    if (_receiverNameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter receiver name first')),
+      );
+      return;
+    }
+
+    final String phoneNumber = _receiverContactController.text.trim();
+    final String email = _receiverEmailController.text.trim();
+    
+    if (phoneNumber.isEmpty && email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No contact information available')),
+      );
+      return;
+    }
+    
+    ContactUtils.showContactOptions(
+      context,
+      contactName: _receiverNameController.text,
+      phoneNumber: phoneNumber.isNotEmpty ? phoneNumber : null,
+      whatsappNumber: phoneNumber.isNotEmpty ? phoneNumber : null,
+      email: email.isNotEmpty ? email : null,
+    );
+  }
+
   Future<void> _saveDonation() async {
     if (!_formKey.currentState!.validate()) return;
     
@@ -75,10 +145,10 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
     final donationProvider = Provider.of<DonationProvider>(context, listen: false);
     
     final locationDetails = {
-      'Division': _divisionController.text.trim(),
-      'District': _districtController.text.trim(),
-      'City': _cityController.text.trim(),
-      'Area': _areaController.text.trim(),
+      'Division': _selectedDivision ?? '',
+      'District': _selectedDistrict ?? '',
+      'City': _selectedCity ?? '',
+      'Upazila': _selectedUpazila ?? '',
     };
     
     final success = await donationProvider.addDonation(
@@ -91,6 +161,7 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
       purpose: _purposeController.text.trim(),
       donationDate: _selectedDate,
       locationDetails: locationDetails,
+      receiverEmail: _receiverEmailController.text.trim(),
     );
     
     if (success && mounted) {
@@ -265,13 +336,25 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
               const SizedBox(height: 24),
 
               // Receiver Details
-              const Text(
-                'Receiver Details',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppConstants.textColor,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Receiver Details',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textColor,
+                    ),
+                  ),
+                  // Contact Actions Button
+                  IconButton(
+                    icon: const Icon(Icons.contact_phone),
+                    onPressed: _showReceiverContactOptions,
+                    tooltip: 'Contact Actions',
+                    color: AppConstants.primaryColor,
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -300,6 +383,46 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
                   }
                   return null;
                 },
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.phone, size: 20),
+                      onPressed: () {
+                        if (_receiverContactController.text.isNotEmpty) {
+                          ContactUtils.makePhoneCall(_receiverContactController.text);
+                        }
+                      },
+                      color: Colors.green,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.whatsapp, size: 20),
+                      onPressed: () {
+                        if (_receiverContactController.text.isNotEmpty) {
+                          ContactUtils.openWhatsApp(_receiverContactController.text);
+                        }
+                      },
+                      color: const Color(0xFF25D366),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                label: 'Receiver Email',
+                hint: 'Enter receiver\'s email address',
+                controller: _receiverEmailController,
+                keyboardType: TextInputType.emailAddress,
+                prefixIcon: Icons.email_outlined,
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.email, size: 20),
+                  onPressed: () {
+                    if (_receiverEmailController.text.isNotEmpty) {
+                      ContactUtils.sendEmail(_receiverEmailController.text);
+                    }
+                  },
+                  color: Colors.red,
+                ),
               ),
               const SizedBox(height: 24),
 
@@ -316,32 +439,25 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: CustomTextField(
+                    child: SearchableDropdown(
                       label: 'Division',
-                      hint: 'Enter division',
-                      controller: _divisionController,
-                      textCapitalization: TextCapitalization.words,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
+                      hint: 'Select division',
+                      value: _selectedDivision,
+                      items: LocationData.divisions,
+                      onChanged: _onDivisionChanged,
+                      isRequired: true,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: CustomTextField(
+                    child: SearchableDropdown(
                       label: 'District',
-                      hint: 'Enter district',
-                      controller: _districtController,
-                      textCapitalization: TextCapitalization.words,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
+                      hint: 'Select district',
+                      value: _selectedDistrict,
+                      items: _districtsList,
+                      onChanged: _onDistrictChanged,
+                      isRequired: true,
+                      isEnabled: _selectedDivision != null,
                     ),
                   ),
                 ],
@@ -350,32 +466,26 @@ class _AddDonationScreenState extends State<AddDonationScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: CustomTextField(
+                    child: SearchableDropdown(
                       label: 'City',
-                      hint: 'Enter city',
-                      controller: _cityController,
-                      textCapitalization: TextCapitalization.words,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
+                      hint: 'Select city',
+                      value: _selectedCity,
+                      items: _citiesList,
+                      onChanged: (city) => setState(() => _selectedCity = city),
+                      isRequired: true,
+                      isEnabled: _selectedDistrict != null,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: CustomTextField(
-                      label: 'Area',
-                      hint: 'Enter area',
-                      controller: _areaController,
-                      textCapitalization: TextCapitalization.words,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
+                    child: SearchableDropdown(
+                      label: 'Upazila',
+                      hint: 'Select upazila',
+                      value: _selectedUpazila,
+                      items: _upazilasList,
+                      onChanged: (upazila) => setState(() => _selectedUpazila = upazila),
+                      isRequired: true,
+                      isEnabled: _selectedDistrict != null,
                     ),
                   ),
                 ],

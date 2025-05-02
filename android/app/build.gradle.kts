@@ -7,6 +7,16 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+repositories {
+    google()
+    mavenCentral()
+    maven { url = uri("https://storage.googleapis.com/download.flutter.io") }
+    flatDir {
+        dirs("${project.rootDir}/../../build/host/outputs/repo")
+        dirs("${project.rootDir}/../../build/host/outputs/repo/exitCode0")
+    }
+}
+
 android {
     namespace = "com.example.donorly"
     compileSdk = flutter.compileSdkVersion
@@ -37,6 +47,16 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
+    // Adding this to fix Flutter embedding issues
+    packagingOptions {
+        resources {
+            pickFirsts.add("**/flutter_embedding_release.jar")
+            pickFirsts.add("**/armeabi_v7a_release.jar")
+            pickFirsts.add("**/arm64_v8a_release.jar")
+            pickFirsts.add("**/x86_64_release.jar")
         }
     }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../constants/app_constants.dart';
 import '../models/donation_model.dart';
+import '../utils/contact_utils.dart';
 
 class DonationCard extends StatelessWidget {
   final DonationModel donation;
@@ -73,40 +74,51 @@ class DonationCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (onEdit != null || onDelete != null)
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'edit' && onEdit != null) {
-                        onEdit!();
-                      } else if (value == 'delete' && onDelete != null) {
-                        onDelete!();
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      if (onEdit != null)
-                        const PopupMenuItem(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit, size: 18),
-                              SizedBox(width: 8),
-                              Text('Edit'),
-                            ],
-                          ),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'edit' && onEdit != null) {
+                      onEdit!();
+                    } else if (value == 'delete' && onDelete != null) {
+                      onDelete!();
+                    } else if (value == 'contact') {
+                      _showContactOptions(context);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'contact',
+                      child: Row(
+                        children: [
+                          Icon(Icons.contact_phone, size: 18, color: Colors.blue),
+                          SizedBox(width: 8),
+                          Text('Contact'),
+                        ],
+                      ),
+                    ),
+                    if (onEdit != null)
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit, size: 18),
+                            SizedBox(width: 8),
+                            Text('Edit'),
+                          ],
                         ),
-                      if (onDelete != null)
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete, size: 18, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text('Delete', style: TextStyle(color: Colors.red)),
-                            ],
-                          ),
+                      ),
+                    if (onDelete != null)
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, size: 18, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Delete', style: TextStyle(color: Colors.red)),
+                          ],
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -134,7 +146,8 @@ class DonationCard extends StatelessWidget {
                   donation.receiverName,
                 ),
                 const SizedBox(width: 16),
-                _buildInfoItem(
+                _buildContactItem(
+                  context,
                   Icons.phone_outlined,
                   'Contact',
                   donation.receiverContact,
@@ -214,6 +227,71 @@ class DonationCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildContactItem(BuildContext context, IconData icon, String title, String value) {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: AppConstants.primaryColor,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppConstants.subtitleColor,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        value,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: AppConstants.textColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => _showContactOptions(context),
+                      child: const Icon(
+                        Icons.contacts,
+                        size: 16,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showContactOptions(BuildContext context) {
+    ContactUtils.showContactOptions(
+      context,
+      contactName: donation.receiverName,
+      phoneNumber: donation.receiverContact,
+      whatsappNumber: donation.receiverContact,
+      email: donation.receiverEmail,
     );
   }
 } 

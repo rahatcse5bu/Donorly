@@ -7,10 +7,11 @@ class DonationModel {
   final String address;
   final String receiverName;
   final String receiverContact;
+  final String? receiverEmail;
   final String bloodGroup;
   final String purpose; // Purpose of donation
   final Timestamp donationDate;
-  final Map<String, String> locationDetails; // Division, district, city, area
+  final Map<String, String> locationDetails; // Division, district, city, area/upazila
 
   DonationModel({
     required this.id,
@@ -19,6 +20,7 @@ class DonationModel {
     required this.address,
     required this.receiverName,
     required this.receiverContact,
+    this.receiverEmail,
     required this.bloodGroup,
     required this.purpose,
     required this.donationDate,
@@ -34,6 +36,7 @@ class DonationModel {
       'address': address,
       'receiverName': receiverName,
       'receiverContact': receiverContact,
+      'receiverEmail': receiverEmail,
       'bloodGroup': bloodGroup,
       'purpose': purpose,
       'donationDate': donationDate,
@@ -50,6 +53,7 @@ class DonationModel {
       address: map['address'] ?? '',
       receiverName: map['receiverName'] ?? '',
       receiverContact: map['receiverContact'] ?? '',
+      receiverEmail: map['receiverEmail'],
       bloodGroup: map['bloodGroup'] ?? '',
       purpose: map['purpose'] ?? '',
       donationDate: map['donationDate'] ?? Timestamp.now(),
@@ -65,6 +69,7 @@ class DonationModel {
     String? address,
     String? receiverName,
     String? receiverContact,
+    String? receiverEmail,
     String? bloodGroup,
     String? purpose,
     Timestamp? donationDate,
@@ -77,6 +82,7 @@ class DonationModel {
       address: address ?? this.address,
       receiverName: receiverName ?? this.receiverName,
       receiverContact: receiverContact ?? this.receiverContact,
+      receiverEmail: receiverEmail ?? this.receiverEmail,
       bloodGroup: bloodGroup ?? this.bloodGroup,
       purpose: purpose ?? this.purpose,
       donationDate: donationDate ?? this.donationDate,
